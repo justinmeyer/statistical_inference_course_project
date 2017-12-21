@@ -1,0 +1,117 @@
+---
+title: "Statistical Inference Course Project Analysis"
+author: "Justin Meyer"
+date: "December 21, 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview
+
+This project will analyze the toothGrowth dataset. 
+
+## Load the ToothGrowth data and perform some basic exploratory data analyses
+
+Simulate the exponential distribution 1000 times with 40 samples and a rate of 0.2. Take both the means and variances of those 1000 distributions.
+
+```{r}
+
+# Simulate means of the exponential distribution
+means <- NULL
+for(i in 1:1000) means <- c(means, mean(rexp(n = 40, rate = 0.2)))
+
+# Simulate variances of the exponential distribution
+vars <- NULL
+for(i in 1:1000) vars <- c(vars, var(rexp(n = 40, rate = 0.2)))
+
+```
+
+## Sample Mean versus Theoretical Mean
+
+*Did you show where the distribution is centered at and compare it to the theoretical center of the distribution?* 
+
+As per the instructions "The exponential distribution can be simulated in R with rexp(n, lambda) where lambda is the rate parameter. The mean of exponential distribution is 1/lambda and the standard deviation is also 1/lambda. Set lambda = 0.2 for all of the simulations."
+
+Therefore the theoretical mean of the distribution is 1/0.2 = 5. The following chart compares the observed mean (blue) to the theoretical mean (red).
+
+As you can see the observed mean `r mean(means)` is very close to the theoretical mean 5:
+
+```{r, message=FALSE}
+
+# Create a plot
+means <- data.frame(means)
+
+library(ggplot2)
+ggplot(data = means, aes(means)) + 
+        geom_histogram() + 
+        geom_vline(aes(xintercept = (mean(means))),
+            color="blue", linetype = "solid", size = 1) + 
+        geom_vline(aes(xintercept = 5),
+            color="red", linetype = "dashed", size = 1) + 
+        labs(title = "Exponential Distribution Means vs. Theoretical Mean")
+
+```
+
+## Sample Variance versus Theoretical Variance
+
+*Did you show how variable it is and compare it to the theoretical variance of the distribution?*
+
+As per the instructions "The exponential distribution can be simulated in R with rexp(n, lambda) where lambda is the rate parameter. The mean of exponential distribution is 1/lambda and the standard deviation is also 1/lambda. Set lambda = 0.2 for all of the simulations."
+
+Therefore the theoretical standard deviation of the distribution is 1/0.2 = 5. Since the standard deviation is the square root of variance the theoretical variance must be 5^2 = 25. The following chart compares the observed variance (blue) to the theoretical variance (red).
+
+The observed variance of the exponential distribution `r mean(vars)` is very close to the theoretical variance 25.
+
+```{r, message=FALSE}
+
+# Create a plot
+vars <- data.frame(vars)
+
+ggplot(data = vars, aes(vars)) + 
+        geom_histogram() + 
+        geom_vline(aes(xintercept = (mean(vars))),
+            color="blue", linetype = "solid", size = 1) + 
+        geom_vline(aes(xintercept = 25),
+            color="red", linetype = "dashed", size = 1) + 
+        labs(title = "Exponential Distribution Variances vs. Theoretical Variance")
+
+```
+
+## Distribution
+
+Simulate the random exponential distribution.
+
+```{r, message=FALSE}
+
+# Create data
+rexps <- rexp(n = 1000, rate = 0.2)
+
+```
+
+The following chart shows the random exponential distribution. As you can see it is not normal, with the distribution skewed to the right.
+
+```{r, message=FALSE}
+
+# Create a plot
+
+rexps <- data.frame(rexps)
+
+ggplot(data = rexps, aes(rexps)) + 
+        geom_histogram() + 
+        labs(title = "Random Exponential Distribution")
+
+```
+
+The means of 1000 random exponential distributions are normal though. 
+
+```{r, message=FALSE}
+
+# Create a plot
+ggplot(data = means, aes(means)) + 
+        geom_histogram() + 
+        labs(title = "Distribution of 1000 Exponential Distribution Means")
+
+```
